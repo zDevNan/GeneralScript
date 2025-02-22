@@ -28,28 +28,30 @@ local function teleportToSam()
     end
 end
 
--- **Função para dropar todos os itens do inventário**
+-- **Função para dropar todos os itens dropáveis do inventário**
 local function dropAllItems()
     local backpack = player.Backpack
     local humanoid = player.Character and player.Character:FindFirstChild("Humanoid")
 
     if not humanoid then return end -- Se o humanoid não existir, cancela
 
-    while #backpack:GetChildren() > 0 do
-        for _, item in pairs(backpack:GetChildren()) do
-            if item:IsA("Tool") then
-                item.Parent = player.Character -- **Move o item para a mão do jogador**
-            end
+    local droppedSomething = false -- Para verificar se dropamos algo
+
+    for _, item in pairs(backpack:GetChildren()) do
+        if item:IsA("Tool") and item.CanBeDropped then -- **Verifica se pode ser dropado**
+            item.Parent = player.Character -- **Move para a mão do jogador**
+            task.wait(0.2) -- Pequeno delay para equipar
+            keypress(Enum.KeyCode.Backspace)
+            task.wait(0.1)
+            keyrelease(Enum.KeyCode.Backspace)
+            droppedSomething = true
+            task.wait(0.3) -- Tempo extra para garantir o drop
         end
-        
-        task.wait(0.2) -- Pequeno delay para garantir que os itens equiparam corretamente
-        
-        -- **Pressiona e solta Backspace para dropar os itens equipados**
-        keypress(Enum.KeyCode.Backspace)
-        task.wait(0.1)
-        keyrelease(Enum.KeyCode.Backspace)
-        
-        task.wait(0.5) -- Aguarda antes de tentar pegar mais itens, garantindo que o jogo processou os drops
+    end
+
+    -- **Se não conseguiu dropar nada, evita loop infinito**
+    if not droppedSomething then
+        warn("Nenhum item dropável encontrado, seguindo para rejoin...")
     end
 end
 
@@ -75,7 +77,7 @@ local function main()
     task.wait(2)
     teleportToSam() -- **Teleporta para a ilha do Sam**
     task.wait(2) 
-    dropAllItems() -- **Agora dropa absolutamente TUDO da mochila**
+    dropAllItems() -- **Dropa os itens dropáveis**
     task.wait(2)
     rejoin() -- Reentra no servidor
 end
