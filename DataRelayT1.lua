@@ -20,11 +20,11 @@ local function updateClothing()
     end
 end
 
--- **Função para teleportar para a ilha do Sam**
-local function teleportToSam()
+-- **Função para teleportar para a ilha Kaizu**
+local function teleportToKaizu()
     local character = player.Character
     if character and character:FindFirstChild("HumanoidRootPart") then
-        character.HumanoidRootPart.CFrame = CFrame.new(-1283, 218, -1348)
+        character.HumanoidRootPart.CFrame = CFrame.new(-1526.023, 365, 10510.021)
     end
 end
 
@@ -70,7 +70,7 @@ task.spawn(function()
     while _G.AutoFarm do
         respawnPlayer()
         updateClothing()
-        teleportToSam()
+        teleportToKaizu()
         task.wait(1) -- Espera antes de pegar os Compasses
         claimAllCompasses()
         task.wait(1) -- Espera antes de dropar
