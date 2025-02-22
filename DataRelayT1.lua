@@ -31,14 +31,25 @@ end
 -- **Função para dropar todos os itens do inventário**
 local function dropAllItems()
     local backpack = player.Backpack
-    for _, item in pairs(backpack:GetChildren()) do
-        if item:IsA("Tool") then
-            player.Character.Humanoid:EquipTool(item) -- Segura o item na mão
-            task.wait(0.5) -- Pequeno delay para evitar falhas
-            keypress(Enum.KeyCode.Backspace) -- Simula pressionar Backspace
-            task.wait(0.2)
-            keyrelease(Enum.KeyCode.Backspace) -- Solta a tecla
+    local humanoid = player.Character and player.Character:FindFirstChild("Humanoid")
+
+    if not humanoid then return end -- Se o humanoid não existir, cancela
+
+    while #backpack:GetChildren() > 0 do
+        for _, item in pairs(backpack:GetChildren()) do
+            if item:IsA("Tool") then
+                item.Parent = player.Character -- **Move o item para a mão do jogador**
+            end
         end
+        
+        task.wait(0.2) -- Pequeno delay para garantir que os itens equiparam corretamente
+        
+        -- **Pressiona e solta Backspace para dropar os itens equipados**
+        keypress(Enum.KeyCode.Backspace)
+        task.wait(0.1)
+        keyrelease(Enum.KeyCode.Backspace)
+        
+        task.wait(0.5) -- Aguarda antes de tentar pegar mais itens, garantindo que o jogo processou os drops
     end
 end
 
@@ -61,13 +72,10 @@ local function main()
     updateClothing() -- **Executa o código de atualização de roupas**
     task.wait(1) 
     
-    -- **A parte de pegar as bússolas está desativada para testes**
-    -- claimCompasses()
-    
     task.wait(2)
     teleportToSam() -- **Teleporta para a ilha do Sam**
     task.wait(2) 
-    dropAllItems() -- **Dropa tudo do inventário**
+    dropAllItems() -- **Agora dropa absolutamente TUDO da mochila**
     task.wait(2)
     rejoin() -- Reentra no servidor
 end
