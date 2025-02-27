@@ -15,7 +15,7 @@ local character = player.Character or player.CharacterAdded:Wait()
 local humanoid = character:WaitForChild("Humanoid")
 local hrp = character:WaitForChild("HumanoidRootPart")
 
-local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/REDzHUB/RedzLibV5/main/Source.Lua"))()
+local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/MetatronXTryHard/Outhers/752c29e5ca827e9d312877715936b2f1a644b49e/UI/RedzLibV5-main/Source.Lua"))()
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
